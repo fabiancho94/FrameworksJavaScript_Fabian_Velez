@@ -38,7 +38,7 @@ $('.btn-reinicio').on("click", function(){
   $("#score-text").html("0")
   $("#movimientos-text").html("0")
   // Cambio de texto a reniciar
-  $(this).text("Reiniciar")
+  $(this).html("Reiniciar")
   // Limpiando los intervalos
   clearInterval(llenar);
   clearInterval(match);
@@ -48,8 +48,8 @@ $('.btn-reinicio').on("click", function(){
   borrar()
   // Llenar el Tablero Y
   // Empezar cuenta regresiva
-  llenar = setInterval(lenarTablero(),150)
-  cuentaAtras = setInterval(iniciarTimer(),1000)
+  llenar = setInterval(function(){llenarTablero()},150)
+  cuentaAtras = setInterval(function(){iniciarTimer()},1000)
 })
 
 // Animacion del titulo
@@ -77,12 +77,12 @@ function iniciarTimer () {
   min = Math.floor(min)
   seg = Math.floor(seg)
 
-  if(min <= 0 && seg <= 0 ){
+  if(t_total == 0 ){
     clearInterval(llenar);
     clearInterval(match);
     clearInterval(masDulces);
     clearInterval(cuentaAtras);
-    $( ".panel-tablero" ).hide("drop","slow",callback);
+    $( ".panel-tablero" ).hide("drop","slow",final);
     $( ".time" ).hide();
   }
   else if (seg<10) {
@@ -112,7 +112,7 @@ function llenarTablero(){
   if(index==8)
   {
     clearInterval(llenar);
-    match=setInterval(sumarPuntos,150)
+    match=setInterval(function(){sumarPuntos()},150)
   }
 }
 function buscarHorizontal()
@@ -159,8 +159,8 @@ function buscarVertical(){
 // Funcion para verificar si hay dulces para eliminar y asi sumar puntos
 function sumarPuntos (){
   matriz = 0;
-  resH = horizontal()
-  resV = vertical()
+  resH = buscarHorizontal()
+  resV = buscarVertical()
 
   for(var j=1;j<8;j++)
   {
@@ -171,7 +171,7 @@ function sumarPuntos (){
   {
       clearInterval(match);
       bnewd=0;
-      masDulces=setInterval(agregarDulces(),600)
+      masDulces=setInterval(function(){agregarDulces()},600)
   }
 
   if(resH==1 || resV==1)
@@ -211,8 +211,8 @@ function sumarPuntos (){
       do{
         espera=dropped.swap($(droppedOn));
       }while(espera==0)
-      resH=horizontal()
-      resV=vertical()
+      resH=buscarHorizontal()
+      resV=buscarVertical()
       if(resH==0 && resV==0)
       {
         dropped.swap($(droppedOn));
@@ -221,7 +221,7 @@ function sumarPuntos (){
       {
         clearInterval(masDulces);
         clearInterval(match);
-        match=setInterval(sumarPuntos(),150)
+        match=setInterval(function(){sumarPuntos()},150)
       }
     },
   });
@@ -290,7 +290,7 @@ function agregarDulces(){
   if(contador==1)
   {
       clearInterval(masDulces);
-      match=setInterval(sumarPuntos(),150)
+      match=setInterval(function(){sumarPuntos()},150)
   }
   contador=contador-1;
 }
